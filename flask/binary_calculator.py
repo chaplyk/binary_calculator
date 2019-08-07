@@ -8,7 +8,6 @@ app = Flask(__name__)
 def calculation():
     result = 0
     error = ''
-    # you may want to customize your GET... in this case not applicable
     if request.method=='POST':
         first = request.form['first']
         second = request.form['second']
