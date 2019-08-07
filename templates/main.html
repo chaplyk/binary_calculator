@@ -2,13 +2,14 @@
 <form method="POST">
     <input type="text" name="first" value="">
     <select name="action">
-        <option value="1" selected>+</option>
+        <option value="+" selected>+</option>
+        <option value="-">-</option>
     </select>
     <input type="text" name="second" value="">
     <input type="submit" value="Submit">
     {% if result %}
     <p>
-        <label name='result'>Answer is: {{ result }}</label>
+        <label name='result'>Result is: {{ result }}</label>
     </p>
     {% endif %}
     {% if error %}
