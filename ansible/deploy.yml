@@ -9,7 +9,7 @@
   tasks:
     - name: enable maintenance mode
       template:
-        src=maintenance.tpl
+        src={{ jenkins_workspace }}/ansible/maintenance.tpl
         dest={{ nginx_sites }}/default
       notify: restart nginx
     - name: remove previous version
@@ -33,13 +33,13 @@
       - "{{ binary_calculator }}/.flask_env/bin/pip3 install -r {{ binary_calculator }}/requirements.txt"
     - name: correct ownership
       file: dest={{ binary_calculator }} owner=ubuntu group=ubuntu recurse=yes
-    - name: disable maintenance mode
-      template:
-        src=default.tpl
-        dest={{ nginx_sites }}/default
-      notify: 
-        - restart nginx
-        - restart binary_calculator
+#    - name: disable maintenance mode
+#      template:
+#        src={{ jenkins_workspace }}/ansible/default.tpl
+#        dest={{ nginx_sites }}/default
+#      notify: 
+#        - restart nginx
+#        - restart binary_calculator
   handlers:
     - name: restart nginx
       service:
