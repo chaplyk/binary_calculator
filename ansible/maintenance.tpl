@@ -1,6 +1,6 @@
 server {
 	listen 80;
-	root /home/ubuntu/binary_calculator/binary_calculator/templates;
+	root /home/ubuntu/binary_calculator/templates;
 
 	index maintenance.html;
 
