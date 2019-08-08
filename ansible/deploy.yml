@@ -11,7 +11,8 @@
       template:
         src={{ jenkins_workspace }}/ansible/maintenance.tpl
         dest={{ nginx_sites }}/default
-      notify: restart nginx
+      notify: 
+        - restart nginx
     - copy: 
         src={{ jenkins_workspace }}/ansible/maintenance.html
         dest=/tmp/binary_calculator/maintenance.html
