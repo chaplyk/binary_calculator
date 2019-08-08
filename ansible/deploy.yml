@@ -12,12 +12,12 @@
         src=maintenance.tpl
         dest={{ nginx_sites }}/default
       notify: restart nginx
-    - name: empty previous version subdirectory
+    - name: remove previous version
       file:
         state: absent
         path: "{{ previous_path }}/"
     - name: move previous version to subdirectory
-      shell: mv {{ binary_calculator }}/* {{ previous_path }}/ || true
+      shell: mkdir {{ previous_path }}; mv {{ binary_calculator }}/* {{ previous_path }}/ || true
     - name: copy jenkins artifacts
       synchronize:
         src={{ jenkins_workspace }}/flask/
@@ -31,11 +31,13 @@
       with_items:
       - python3 -m venv {{ binary_calculator }}/.flask_env
       - "{{ binary_calculator }}/.flask_env/bin/pip3 install -r {{ binary_calculator }}/requirements.txt"
-    - name: Disable maintenance mode
+    - name: disable maintenance mode
       template:
         src=default.tpl
         dest={{ nginx_sites }}/default
-      notify: restart nginx
+      notify: 
+        - restart nginx
+        - restart binary_calculator
   handlers:
     - name: restart nginx
       service:
