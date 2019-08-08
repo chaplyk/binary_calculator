@@ -31,6 +31,8 @@
       with_items:
       - python3 -m venv {{ binary_calculator }}/.flask_env
       - "{{ binary_calculator }}/.flask_env/bin/pip3 install -r {{ binary_calculator }}/requirements.txt"
+    - name: correct ownership
+      file: dest={{ binary_calculator }} owner=ubuntu group=ubuntu recurse=yes
     - name: disable maintenance mode
       template:
         src=default.tpl
