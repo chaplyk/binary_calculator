@@ -8,14 +8,14 @@
     jenkins_workspace: /var/lib/jenkins/workspace/binary_calculator
   tasks:
     - name: enable maintenance mode
-      template:
+      copy:
+        src={{ jenkins_workspace }}/ansible/maintenance.html
+        dest=/tmp/binary_calculator/maintenance.html
+    - template:
         src={{ jenkins_workspace }}/ansible/maintenance.tpl
         dest={{ nginx_sites }}/default
     - name: restart nginx
       service: name=nginx state=restarted
-    - copy: 
-        src={{ jenkins_workspace }}/ansible/maintenance.html
-        dest=/tmp/binary_calculator/maintenance.html
     - name: remove previous version
       file:
         state: absent
