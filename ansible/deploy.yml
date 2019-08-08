@@ -18,6 +18,9 @@
         path: "{{ previous_path }}/"
     - name: move previous version to subdirectory
       shell: mkdir {{ previous_path }}; mv {{ binary_calculator }}/* {{ previous_path }}/ || true
+    - name: pause to do testing in a browser
+      pause:
+        seconds: 30
     - name: copy jenkins artifacts
       synchronize:
         src={{ jenkins_workspace }}/flask/
