@@ -8,6 +8,7 @@ app = Flask(__name__)
 def calculation():
     result = 0
     error = ''
+    commit = open("HEAD","r").read()
     if request.method=='POST':
         first = request.form['first']
         second = request.form['second']
@@ -23,7 +24,7 @@ def calculation():
                     result = bin(int(first, 2) - int(second, 2))[2:]
             except ValueError:
                 error = 'Please use binary input only.'
-    return render_template('main.html', result=result, error=error)
+    return render_template('main.html', result=result, error=error, commit=commit)
 
 if __name__ == "__main__":
     app.run()

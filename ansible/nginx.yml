@@ -1,0 +1,47 @@
+---
+- hosts: servers
+  become: true
+  vars:
+    nginx_sites: /etc/nginx/sites-enabled
+    binary_calculator: /home/ubuntu/binary_calculator
+    previous_path: "{{ binary_calculator }}/previous"
+    jenkins_workspace: /var/lib/jenkins/workspace/binary_calculator
+  tasks:
+    - name: enable maintenance mode
+      template:
+        src=maintenance.tpl
+        dest={{ nginx_sites }}/default
+      notify: restart nginx
+    - name: empty previous version subdirectory
+      file:
+        state: absent
+        path: "{{ previous_path }}/"
+    - name: move previous version to subdirectory
+      shell: mv {{ binary_calculator }}/* {{ previous_path }}/ || true
+    - name: copy jenkins artifacts
+      synchronize:
+        src={{ jenkins_workspace }}/flask/
+        dest={{ binary_calculator }}
+    - name: copy commit
+      copy:
+        src={{ jenkins_workspace }}/.git/HEAD
+        dest={{ binary_calculator }}/HEAD
+    - name: create venv and install requirements
+      command: "{{ item }}"
+      with_items:
+      - python3 -m venv {{ binary_calculator }}/.flask_env
+      - "{{ binary_calculator }}/.flask_env/bin/pip3 install -r {{ binary_calculator }}/requirements.txt"
+    - name: Disable maintenance mode
+      template:
+        src=default.tpl
+        dest={{ nginx_sites }}/default
+      notify: restart nginx
+  handlers:
+    - name: restart nginx
+      service:
+        name=nginx
+        state=restarted
+    - name: restart binary_calculator
+      service:
+        name=binary_calculator
+        state=restarted
