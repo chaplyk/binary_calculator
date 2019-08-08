@@ -2,7 +2,7 @@
 - hosts: servers
   become: true
   vars:
-    nginx_sites: /etc/nginx/sites-enabled
+    nginx_sites: /etc/nginx/sites-available
     binary_calculator: /home/ubuntu/binary_calculator
     previous_path: "{{ binary_calculator }}/previous"
     jenkins_workspace: /var/lib/jenkins/workspace/binary_calculator
@@ -12,6 +12,9 @@
         src={{ jenkins_workspace }}/ansible/maintenance.tpl
         dest={{ nginx_sites }}/default
       notify: restart nginx
+    - copy: 
+        src={{ jenkins_workspace }}/ansible/maintenance.html
+        dest=/tmp/binary_calculator/maintenance.html
     - name: remove previous version
       file:
         state: absent
